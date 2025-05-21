@@ -25,8 +25,8 @@ class Maze():
         self.facing:int = 1
 
     def parseMaze(self,str:str,set:bool=False):
-        maze = [[]]
-        rowCount = 0
+        maze:list = [[]]
+        rowCount:int = 0
         for char in str:
             if char == "\n":
                 maze.append([])
@@ -46,10 +46,10 @@ class Maze():
             string += "\n"
         return string
 
-    def solveMaze(self):
-        solved = False
-        end = self.getEnd()
-        start = self.getStart()
+    def solveMaze(self) -> str:
+        solved:bool = False
+        end:list = self.getEnd()
+        start:list = self.getStart()
         self.currentCoords = start
         while not solved:
             nextCoordsFound:bool = False
@@ -58,7 +58,7 @@ class Maze():
                     return "Impossible"
 
                 checkCoords:tuple = self.getNextCoords()
-                checkSpot = self.Maze[checkCoords[0]][checkCoords[1]]
+                checkSpot:str = self.Maze[checkCoords[0]][checkCoords[1]]
                 if checkSpot == self.END or checkSpot == self.PATH or (checkSpot == self.BEEN_ONCE and not self.isNewPath()):
                     nextCoordsFound = True
                     if checkSpot == self.END:
@@ -74,17 +74,15 @@ class Maze():
         return self.validateMaze()
     
     def validateMaze(self)->str:
-        solved = False
-        end = self.getEnd()
-        start = self.getStart()
+        solved:bool = False
+        end:list = self.getEnd()
+        start:list = self.getStart()
         self.currentCoords = start
         while not solved:
             nextCoordsFound:bool = False
             checkCoords:tuple = self.getNextCoords()
-            checkSpot = self.Maze[checkCoords[0]][checkCoords[1]]
+            checkSpot:str = self.Maze[checkCoords[0]][checkCoords[1]]
             while not nextCoordsFound:
-                
-
                 if checkSpot == self.BEEN_ONCE or checkSpot == self.END:
                     nextCoordsFound = True
                     if checkSpot == self.END:
@@ -105,22 +103,22 @@ class Maze():
         return self.BEEN_ONCE if self.Maze[self.currentCoords[0]][self.currentCoords[1]] != self.BEEN_ONCE and not self.isIntersection() else self.BEEN_TWICE if not self.isIntersection() or (self.isIntersection and not self.isNewPath()) else self.BEEN_ONCE
     
     def isIntersection(self) -> bool:
-        wallCount = 0
-        checkCoords = [[self.currentCoords[0] ,self.currentCoords[1]+ 1],[self.currentCoords[0] + 1,self.currentCoords[1]],[self.currentCoords[0],self.currentCoords[1] - 1],[self.currentCoords[0] - 1,self.currentCoords[1]]]
+        wallCount:int = 0
+        checkCoords:list = self.getCheckCoords()
         for coord in checkCoords:
             wallCount += 1 if self.Maze[coord[0]][coord[1]] == self.WALL else 0
         return True if wallCount >= 2 else False
     
     def isDeadEnd(self) -> bool:
-        wallCount = 0
-        checkCoords = [[self.currentCoords[0] ,self.currentCoords[1]+ 1],[self.currentCoords[0] + 1,self.currentCoords[1]],[self.currentCoords[0],self.currentCoords[1] - 1],[self.currentCoords[0] - 1,self.currentCoords[1]]]
+        wallCount:int = 0
+        checkCoords:list = self.getCheckCoords()
         for coord in checkCoords:
             wallCount += 1 if self.Maze[coord[0]][coord[1]] == self.WALL else 0
         return True if wallCount >= 3 else False
     
     def isNewPath(self) -> bool:
-        pathCount = 0
-        checkCoords = [[self.currentCoords[0] ,self.currentCoords[1]+ 1],[self.currentCoords[0] + 1,self.currentCoords[1]],[self.currentCoords[0],self.currentCoords[1] - 1],[self.currentCoords[0] - 1,self.currentCoords[1]]]
+        pathCount:int = 0
+        checkCoords:list = self.getCheckCoords()
         for coord in checkCoords:
             mazeCheck = self.Maze[coord[0]][coord[1]]
             pathCount += 1 if mazeCheck == self.PATH or mazeCheck == self.END else 0
@@ -128,12 +126,15 @@ class Maze():
         return True if pathCount >= 1 else False
     
     def isStuck(self) -> bool:
-        wallCount = 0
-        checkCoords = [[self.currentCoords[0] ,self.currentCoords[1]+ 1],[self.currentCoords[0] + 1,self.currentCoords[1]],[self.currentCoords[0],self.currentCoords[1] - 1],[self.currentCoords[0] - 1,self.currentCoords[1]]]
+        wallCount:int = 0
+        checkCoords:list = self.getCheckCoords()
         for coord in checkCoords:
             wallCount += 1 if self.Maze[coord[0]][coord[1]] == self.WALL else 0
         return True if wallCount >= 4 else False
     
+    def getCheckCoords(self):
+        return [[self.currentCoords[0] ,self.currentCoords[1] + 1],[self.currentCoords[0] + 1,self.currentCoords[1]],[self.currentCoords[0],self.currentCoords[1] - 1],[self.currentCoords[0] - 1,self.currentCoords[1]]]
+
     def rotate(self) -> None:
         self.facing += 1
         if self.facing >= 5:
