@@ -97,7 +97,7 @@ class Maze():
         self.MazeStart[start[0]][start[1]] = self.START
         self.MazeStart[end[0]][end[1]] = self.END
 
-        return self.printMaze(self.MazeStart).replace(".","#").replace("$",".")
+        return self.printMaze(self.MazeStart).replace(self.PATH,self.WALL).replace(self.VALID_PATH,self.PATH)
     
     def markSpot(self)->str:
         return self.BEEN_ONCE if self.Maze[self.currentCoords[0]][self.currentCoords[1]] != self.BEEN_ONCE and not self.isIntersection() else self.BEEN_TWICE if not self.isIntersection() or (self.isIntersection and not self.isNewPath()) else self.BEEN_ONCE
